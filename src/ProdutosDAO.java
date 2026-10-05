@@ -16,76 +16,87 @@ import java.util.ArrayList;
 
 
 public class ProdutosDAO {
-    
+
     Connection conn;
     PreparedStatement prep;
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
-    
-    public void cadastrarProduto (ProdutosDTO produto){
-        
-        
 
-    String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";
+    public void cadastrarProduto(ProdutosDTO produto) {
 
-    conn = new conectaDAO().connectDB();
+        String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";
 
-    try {
-        prep = conn.prepareStatement(sql);
+        conn = new conectaDAO().connectDB();
 
-        prep.setString(1, produto.getNome());
-        prep.setInt(2, produto.getValor());
-        prep.setString(3, produto.getStatus());
+        try {
+            prep = conn.prepareStatement(sql);
 
-        prep.executeUpdate();
+            prep.setString(1, produto.getNome());
+            prep.setInt(2, produto.getValor());
+            prep.setString(3, produto.getStatus());
 
-        JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
+            prep.executeUpdate();
 
-    } catch (Exception erro) {
-        JOptionPane.showMessageDialog(null, "Erro ao cadastrar: " + erro.getMessage());
+            JOptionPane.showMessageDialog(null,
+                    "Produto cadastrado com sucesso!");
+
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null,
+                    "Erro ao cadastrar: " + erro.getMessage());
+        }
     }
-}
-        
-        
-        
-    
-    
-    public ArrayList<ProdutosDTO> listarProdutos(){
-        
 
-    String sql = "SELECT * FROM produtos";
+    public ArrayList<ProdutosDTO> listarProdutos() {
 
-    conn = new conectaDAO().connectDB();
+        String sql = "SELECT * FROM produtos";
 
-    try {
-        prep = conn.prepareStatement(sql);
-        resultset = prep.executeQuery();
+        conn = new conectaDAO().connectDB();
 
-        listagem.clear();
+        try {
+            prep = conn.prepareStatement(sql);
+            resultset = prep.executeQuery();
 
-        while (resultset.next()) {
+            listagem.clear();
 
-            ProdutosDTO produto = new ProdutosDTO();
+            while (resultset.next()) {
 
-            produto.setId(resultset.getInt("id"));
-            produto.setNome(resultset.getString("nome"));
-            produto.setValor(resultset.getInt("valor"));
-            produto.setStatus(resultset.getString("status"));
+                ProdutosDTO produto = new ProdutosDTO();
 
-            listagem.add(produto);
+                produto.setId(resultset.getInt("id"));
+                produto.setNome(resultset.getString("nome"));
+                produto.setValor(resultset.getInt("valor"));
+                produto.setStatus(resultset.getString("status"));
+
+                listagem.add(produto);
+            }
+
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null,
+                    "Erro ao listar produtos: " + erro.getMessage());
         }
 
-    } catch (Exception erro) {
-        JOptionPane.showMessageDialog(null,
-                "Erro ao listar produtos: " + erro.getMessage());
+        return listagem;
     }
 
-    return listagem;
-}
-    
-    
-    
-    
-        
-}
+    public void venderProduto(int id) {
 
+        String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+
+        conn = new conectaDAO().connectDB();
+
+        try {
+            prep = conn.prepareStatement(sql);
+
+            prep.setInt(1, id);
+
+            prep.executeUpdate();
+
+            JOptionPane.showMessageDialog(null,
+                    "Produto vendido com sucesso!");
+
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null,
+                    "Erro ao vender produto: " + erro.getMessage());
+        }
+    }
+}
