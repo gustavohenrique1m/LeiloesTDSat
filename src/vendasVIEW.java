@@ -57,6 +57,7 @@ public class vendasVIEW extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 private void listarProdutosVendidos() {
 
